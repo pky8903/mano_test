@@ -1,0 +1,846 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=17mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{hyperref}
+
+\definecolor{navy}{HTML}{174E74}
+\definecolor{muted}{HTML}{586875}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=navy,
+  urlcolor=navy,
+  pdftitle={Discrete OPC Oscillation Theory:
+    Recurrence, Modes and Scaling}
+}
+
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\headheight}{14pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.22}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{muted}
+  DISCRETE OPC / TECHNICAL NOTE}
+\fancyhead[R]{\small\color{muted}
+  23 SEPTEMBER 2026}
+\fancyfoot[L]{\footnotesize\color{muted}
+  Final mask correction under a linear, finite-range model}
+\fancyfoot[R]{\footnotesize\color{muted}\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+\titleformat{\section}
+  {\Large\bfseries\color{navy}}
+  {\thesection.}{0.5em}{}
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{navy}}
+  {}{0pt}{}
+
+\titlespacing*{\section}{0pt}{0pt}{10pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\subtitle}[1]{%
+  {\small\color{muted}#1\par}\medskip}
+\newcommand{\smallnote}[1]{%
+  {\small #1\par}}
+
+\begin{document}
+
+% ============================================================
+\section{Model and correction recurrence}
+\subtitle{A discrete explanation for damped spatial
+oscillations in a converged mask CD profile.}
+
+The object of interest is the \textbf{final mask correction},
+not a residual wafer-CD oscillation.
+A localized error at the left block edge can excite damped
+spatial modes of the inverse model.
+We derive their amplitude, period and decay without
+prescribing a sinusoid as the solution.
+
+\begin{tabularx}{\textwidth}{@{}p{0.29\textwidth}Y@{}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$j=0,1,\ldots$; $s=jd$
+&
+Control index and physical position;
+$j=0$ is the first control.
+\\
+$u_j^{(n)},\,e_j^{(n)}$
+&
+Accumulated mask-CD correction and wafer-CD error
+at iteration $n$.
+\\
+$d$; $M$; $N=2M+1$
+&
+Control spacing; number of neighbors on either side;
+full stencil size.
+\\
+$R=Md$; $R_c=Nd/2$
+&
+Range to the outer control center;
+cell-based half-width $R+d/2$.
+\\
+$a>0$; $b>0$; $E$
+&
+Local sensitivity; total nonlocal sensitivity;
+initial error at $j=0$.
+\\
+\bottomrule
+\end{tabularx}
+
+The nonlocal kernel is uniform and normalized.
+Set controls outside the left boundary to zero;
+do not renormalize the shortened stencil there.
+All interior controls have the same sensitivities.
+
+\begin{equation}
+e_j^{(n)}
+=
+E\delta_{j0}
++
+a u_j^{(n)}
++
+\frac{b}{N}
+\sum_{\ell=-M}^{M}u_{j+\ell}^{(n)}.
+\end{equation}
+
+\begin{equation}
+u_j^{(n+1)}
+=
+u_j^{(n)}-\eta e_j^{(n)},
+\qquad
+u_j^{(0)}=0,
+\qquad
+u_j^{(n)}=0\quad(j<0).
+\end{equation}
+
+The Kronecker delta is $1$ at $j=0$ and $0$ elsewhere.
+The update is \textbf{P-type error correction}.
+It is not gradient descent on squared error, which would
+additionally apply the transposed sensitivity matrix.
+
+\begin{equation}
+\mathbf e^{(n)}
+=
+E\mathbf e_0+J\mathbf u^{(n)},
+\qquad
+\mathbf e^{(n+1)}
+=
+(I-\eta J)\mathbf e^{(n)}.
+\end{equation}
+
+\smallnote{
+Here the bold vector $\mathbf e_0=(1,0,\ldots)$ selects
+the boundary control.
+For a finite positive-definite $J$, convergence requires
+$0<\eta<2/\lambda_{\max}(J)$.
+The experiments used $\eta=1/(a+b)$.
+Spatial decay below is distinct from decay with
+iteration count.
+}
+
+% ============================================================
+\clearpage
+\section{Fixed point and spatial modes}
+\subtitle{Why powers of a characteristic root span
+the solution.}
+
+If the correction converges and $\eta$ is nonzero,
+successive corrections become equal and wafer error
+tends to zero.
+The equilibrium equation is therefore
+
+\begin{equation}
+a u_j
++
+\frac{b}{N}
+\sum_{\ell=-M}^{M}u_{j+\ell}
+=
+-E\delta_{j0},
+\qquad j\geq 0.
+\end{equation}
+
+For $j\geq M$ the stencil is complete and the
+right-hand side is zero.
+Solving for the rightmost value gives a spatial
+recurrence of order $2M$:
+
+\begin{equation}
+u_{j+M}
+=
+-\frac{Na}{b}u_j
+-
+\sum_{\ell=-M}^{M-1}u_{j+\ell},
+\qquad j\geq M.
+\end{equation}
+
+Thus the first $2M$ values uniquely determine
+all subsequent values.
+To find a basis for this recurrence, insert a
+geometric sequence $u_j=r^j$ and divide by $r^j$.
+Multiplication by $r^M$ removes negative powers:
+
+\begin{equation}
+a+\frac{b}{N}\sum_{\ell=-M}^{M}r^\ell=0
+\quad\Longrightarrow\quad
+P_M(r)
+=
+a r^M+\frac{b}{N}\sum_{h=0}^{2M}r^h
+=
+0.
+\end{equation}
+
+Each root supplies a solution $r^j$.
+If the $2M$ roots are distinct, their first $2M$
+values form a Vandermonde matrix.
+Its determinant is nonzero:
+
+\begin{equation}
+V_{k\nu}=r_\nu^k
+\quad(k=0,\ldots,2M-1),
+\qquad
+\det V
+=
+\prod_{\mu<\nu}(r_\nu-r_\mu)
+\neq 0.
+\end{equation}
+
+Consequently any initial $2M$ values can be expressed
+uniquely by these modes.
+Both the resulting mode sum and the desired sequence
+satisfy the same recurrence and initial values,
+so they agree at every later index.
+This establishes completeness, not merely an
+exponential trial solution.
+
+\begin{equation}
+u_j=\sum_{\nu=1}^{2M}C_\nu r_\nu^j.
+\end{equation}
+
+The polynomial is reciprocal:
+its coefficients read the same in reverse.
+Roots occur as $r$ and $1/r$, and real coefficients
+also imply conjugate roots.
+In the stable regime with no unit-circle roots,
+$M$ roots lie inside the unit circle.
+Requiring $u_j$ to vanish as $j$ tends to infinity
+eliminates the growing modes:
+
+\begin{equation}
+u_j=\sum_{\nu=1}^{M}C_\nu r_\nu^j,
+\qquad |r_\nu|<1.
+\end{equation}
+
+\smallnote{
+This note assumes distinct roots, as in the numerical
+examples.
+A repeated root requires additional terms $j^p r^j$.
+The semi-infinite derivation describes a finite block
+when the far boundary has negligible influence
+in the observation window.
+}
+
+% ============================================================
+\clearpage
+\section{Period and spatial decay}
+\subtitle{Exact relations from a conjugate root pair;
+equivalent $q$ representation.}
+
+The real boundary problem has a unique decaying solution
+in the stable regime.
+Complex conjugation produces the same solution,
+so coefficients belonging to conjugate roots
+are conjugates.
+Select an excited complex root $r_*$ with the largest
+modulus below $1$, and choose its positive argument.
+
+\begin{equation}
+r_*=\rho e^{i\theta},
+\qquad
+C_*=|C_*|e^{i\phi},
+\qquad
+0<\rho<1,
+\qquad
+0<\theta<\pi.
+\end{equation}
+
+\begin{equation}
+C_*r_*^j
++
+\overline{C_*}\,\overline{r_*}^{\,j}
+=
+2|C_*|\rho^j\cos(j\theta+\phi).
+\end{equation}
+
+With $s=jd$, the envelope is
+$\exp[(s/d)\ln\rho]$ and the phase advances by
+$\theta/d$ per unit length.
+A full period requires a phase change of $2\pi$.
+Therefore
+
+\begin{equation}
+\boxed{
+A_0=2|C_*|,
+\qquad
+L=\frac{2\pi d}{\theta},
+\qquad
+\gamma=-\frac{\ln\rho}{d},
+\qquad
+\phi=\arg C_*.
+}
+\end{equation}
+
+\begin{equation}
+u_{\mathrm{dom}}(s)
+=
+A_0 e^{-\gamma s}
+\cos\left(\frac{2\pi s}{L}+\phi\right).
+\end{equation}
+
+This is the dominant pair extracted from the exact
+mode sum.
+Other roots contribute faster-decaying terms and may
+matter near the boundary.
+$A_0$ is the dominant envelope extrapolated to $s=0$;
+it is not the actual value $u_0$.
+
+\subsection*{From $r$ to the dimensionless complex frequency $q$}
+
+\begin{equation}
+r=e^{2iq/N},
+\qquad
+q=\frac{N}{2}\bigl(\theta-i\ln\rho\bigr).
+\end{equation}
+
+The finite geometric sum can be evaluated
+without approximation:
+
+\begin{equation}
+\sum_{\ell=-M}^{M}e^{2i\ell q/N}
+=
+e^{-2iMq/N}
+\frac{1-e^{2iq}}{1-e^{2iq/N}}
+=
+\frac{\sin q}{\sin(q/N)}.
+\end{equation}
+
+Using $1-e^{2ix}=-2i e^{ix}\sin x$,
+the exponential prefactors cancel because $N=2M+1$.
+Hence, with $c=a/b$,
+
+\begin{equation}
+c+F_N(q)=0,
+\qquad
+F_N(q)=\frac{\sin q}{N\sin(q/N)},
+\qquad
+q_*=\alpha_N+i\beta_N.
+\end{equation}
+
+\begin{equation}
+\boxed{
+L=\frac{\pi Nd}{\alpha_N}
+ =\frac{2\pi R_c}{\alpha_N},
+\qquad
+\gamma=\frac{2\beta_N}{Nd}
+      =\frac{\beta_N}{R_c}.
+}
+\end{equation}
+
+\smallnote{
+The roots $\alpha_N$ and $\beta_N$ depend on both $c$
+and $N$.
+Replacing $N\sin(q/N)$ by $q$ would be a continuum
+approximation; it is not used for the exact
+discrete predictions.
+}
+
+% ============================================================
+\clearpage
+\section{Amplitude from the left boundary}
+\subtitle{The source fixes the mode coefficients;
+a characteristic root alone does not.}
+
+For $j=0,\ldots,M-1$, the left part of the stencil
+lies outside the domain.
+Since those controls are zero, the first $M$
+equilibrium equations are
+
+\begin{equation}
+a u_j
++
+\frac{b}{N}\sum_{k=0}^{j+M}u_k
+=
+-E\delta_{j0},
+\qquad
+j=0,\ldots,M-1.
+\end{equation}
+
+Substitute the complete decaying mode sum and
+interchange the finite sums:
+
+\begin{equation}
+\sum_{\nu=1}^{M}
+\left[
+a r_\nu^j
++
+\frac{b}{N}\sum_{k=0}^{j+M}r_\nu^k
+\right]C_\nu
+=
+-E\delta_{j0}.
+\end{equation}
+
+Define an $M\times M$ boundary matrix $B$,
+with row index $j=0,\ldots,M-1$ and
+column index $\nu=1,\ldots,M$:
+
+\begin{equation}
+B_{j\nu}
+=
+a r_\nu^j
++
+\frac{b}{N}
+\frac{1-r_\nu^{j+M+1}}{1-r_\nu}.
+\end{equation}
+
+\begin{equation}
+B\mathbf C=-E\mathbf e_0,
+\qquad
+\mathbf C=-E B^{-1}\mathbf e_0.
+\end{equation}
+
+The geometric-sum expression is valid since a
+decaying root is not $1$.
+All interior equations are already satisfied
+by the roots, and these $M$ equations fix the
+$M$ remaining coefficients.
+Numerically, solve the linear system rather than
+forming an inverse.
+
+\begin{equation}
+A_0
+=
+2|E|
+\left|
+\left(B^{-1}\mathbf e_0\right)_*
+\right|.
+\end{equation}
+
+\subsection*{Separate the error scale from the model parameters}
+
+\begin{equation}
+B=b\widetilde B,
+\qquad
+\widetilde B_{j\nu}
+=
+c r_\nu^j
++
+\frac{1}{N}
+\frac{1-r_\nu^{j+M+1}}{1-r_\nu}.
+\end{equation}
+
+\begin{equation}
+\boxed{
+A_0=\frac{|E|}{b}\,\mathcal G(c,M),
+\qquad
+\mathcal G(c,M)
+=
+2\left|
+\left(\widetilde B^{-1}\mathbf e_0\right)_*
+\right|.
+}
+\end{equation}
+
+\textbf{Exact consequence:}
+For a fixed model, multiplying $E$ by a factor
+multiplies the entire correction profile by
+that factor.
+The period and spatial decay do not change;
+envelope and peak-to-peak magnitudes scale by
+its absolute value.
+
+\smallnote{
+\textbf{Amplitude convention:}
+The experimentally discussed second-largest cycle
+peak-to-peak is a separate metric.
+Near the block edge, several modes overlap,
+so it cannot generally be replaced by $2A_0$.
+Even a single damped mode changes its envelope
+between successive extrema.
+}
+
+% ============================================================
+\clearpage
+\section{Critical point and finite-range decay}
+\subtitle{Distinguish oscillation, spatial damping and
+convergence of the correction loop.}
+
+A positive real $r$ between $0$ and $1$ produces
+monotone decay; a negative real $r$ between $-1$
+and $0$ alternates every sample; a nonreal $r$
+produces an oscillation with period
+$2\pi d/\arg(r)$.
+For $a,b>0$, $P_M(r)$ has only positive terms
+when $r>0$, so this box model has no positive-real
+spatial root.
+
+Define the real-frequency model response and
+its bulk stability threshold:
+
+\begin{equation}
+H(\theta)
+=
+a+\frac{b}{N}
+\left[
+1+2\sum_{\ell=1}^{M}\cos(\ell\theta)
+\right].
+\end{equation}
+
+\begin{equation}
+c_N
+=
+-\min_{0\leq\theta\leq\pi}
+\frac{1}{N}
+\left[
+1+2\sum_{\ell=1}^{M}\cos(\ell\theta)
+\right],
+\qquad
+H_{\min}=b(c-c_N).
+\end{equation}
+
+In the tested stencils, the deepest negative lobe
+is the first one.
+Let $q_N$ be its minimum in the equivalent
+$F_N(q)$ representation.
+Differentiation gives
+
+\begin{equation}
+F_N(q_N)=-c_N,
+\qquad
+\cot q_N=\frac{1}{N}\cot(q_N/N).
+\end{equation}
+
+\begin{equation}
+\frac{F_N'}{F_N}
+=
+\cot q-\frac{1}{N}\cot(q/N),
+\qquad
+F_N''(q_N)=c_N(1-N^{-2}).
+\end{equation}
+
+For the last equality, differentiate the logarithmic
+derivative.
+At the minimum its square vanishes, and the
+cotangent identity cancels the remaining
+cotangent-squared terms.
+A Taylor expansion then yields
+
+\begin{equation}
+0
+\simeq
+(c-c_N)
++
+\frac{c_N(1-N^{-2})}{2}(q-q_N)^2.
+\end{equation}
+
+\begin{equation}
+\boxed{
+L\simeq\frac{2\pi R_c}{q_N},
+\qquad
+\gamma\simeq
+\frac{1}{R_c}
+\sqrt{
+\frac{2(c-c_N)}
+     {c_N(1-N^{-2})}
+}.
+}
+\end{equation}
+
+This approximation applies just above $c_N$.
+As $c$ approaches $c_N$ from above, the pair
+approaches the real $q$ axis:
+spatial damping tends to zero while the period
+stays finite.
+Real $q$ means $|r|=1$, not a real $r$.
+Below the threshold, the nearby real-frequency
+modes are undamped and some $H(\theta)$
+become negative.
+
+\smallnote{
+For P correction, a bulk error mode is multiplied
+by $1-\eta H(\theta)$.
+Negative $H$ therefore causes growth for positive
+$\eta$.
+The threshold concerns bulk stability and loss
+of damping, not the first appearance of any
+oscillation.
+A finite block has its own exact eigenvalue threshold.
+}
+
+\smallnote{
+\textbf{Why decay can be nonmonotonic in $R$:}
+Increasing $M$ decreases $c_N$ toward its continuum
+value.
+Near the threshold this increases the square-root
+factor strongly, while $1/R_c$ decreases.
+Their competition produces the rise and fall
+seen in the numerical sweep.
+}
+
+% ============================================================
+\clearpage
+\section{What is proportional to what?}
+\subtitle{Exact discrete dependencies first;
+large-ambit approximations second.}
+
+\begin{equation}
+L=d\,\mathcal L(c,M),
+\qquad
+\gamma=\frac{1}{d}\,g(c,M),
+\qquad
+A_0=\frac{|E|}{b}\,\mathcal G(c,M).
+\end{equation}
+
+\begin{equation}
+\mathcal L(c,M)
+=
+\frac{2\pi}{\arg r_*},
+\qquad
+g(c,M)=-\ln|r_*|,
+\qquad
+c=a/b.
+\end{equation}
+
+{\hbadness=10000
+\small
+\begin{tabularx}{\textwidth}{@{}
+  p{0.36\textwidth}YYY@{}}
+\toprule
+\textbf{Change / fixed quantities}
+&
+\textbf{Amplitude $A_0$}
+&
+\textbf{Period $L$}
+&
+\textbf{Decay $\gamma$}
+\\
+\midrule
+Change $|E|$; $a,b,M,d$ fixed
+&
+Proportional to $|E|$
+&
+Unchanged
+&
+Unchanged
+\\
+\addlinespace
+Scale $a,b$ by $k>0$; $E,M,d$ fixed
+&
+Divided by $k$
+&
+Unchanged
+&
+Unchanged
+\\
+\addlinespace
+Change $d$; $a,b,M,E$ fixed
+&
+Unchanged
+&
+Proportional to $d$
+&
+Proportional to $1/d$
+\\
+\addlinespace
+Change $M$ (ambit); $a,b,d,E$ fixed
+&
+$\mathcal G(c,M)$ determines it
+&
+Root angle determines it
+&
+Root modulus determines it
+\\
+\addlinespace
+Change $a/b$ at fixed $b,M,d,E$
+&
+No universal power law
+&
+No universal power law
+&
+Strong near-threshold sensitivity
+\\
+\bottomrule
+\end{tabularx}\par
+}
+
+The third row rescales physical spacing while
+keeping the same discrete stencil.
+It is different from extending the ambit by
+adding neighbors at fixed $d$.
+In the fourth row, no exact universal power law
+in $R$ is implied.
+
+\subsection*{Large ambit: fixed $d$ and fixed normalized
+coupling strengths}
+
+When $N$ is large, $F_N(q)$ approaches $\sin(q)/q$.
+At fixed $c$ above the continuum threshold,
+the dominant $q$ approaches a fixed complex value
+$\alpha_\infty+i\beta_\infty$.
+Thus
+
+\begin{equation}
+L\simeq\frac{2\pi}{\alpha_\infty}R_c,
+\qquad
+\gamma\simeq\frac{\beta_\infty}{R_c},
+\qquad
+R_c=R+d/2.
+\end{equation}
+
+For the same one-cell source, its physical width
+$d$ and integrated strength $Ed$ remain fixed.
+In the narrow-source continuum limit of this
+half-line boundary problem, the dimensionless
+amplitude gain is proportional to $d/R_c$:
+
+\begin{equation}
+A_0
+\simeq
+K(c)\frac{|E|d}{bR_c},
+\qquad
+d/R_c\ll 1.
+\end{equation}
+
+$K(c)$ is fixed by the normalized kernel and
+the boundary problem.
+This amplitude relation is an asymptotic
+boundary-response result, not an exact identity
+at finite $M$.
+The exact discrete calculation remains the
+boundary-matrix solve in Section~4.
+
+\begin{equation}
+c=0.22:
+\qquad
+L\simeq1.398897R_c,
+\qquad
+\gamma\simeq0.159433/R_c.
+\end{equation}
+
+\smallnote{
+\textbf{Interpretation:}
+At large ambit the extrapolated envelope decreases
+approximately as $1/R_c$, but the decay length
+$1/\gamma$ grows with $R_c$.
+At a fixed distant position,
+$A_0\exp(-\gamma s)$ can therefore increase even
+when $A_0$ decreases.
+}
+
+% ============================================================
+\clearpage
+\section{Numerical validation and use}
+\subtitle{Independent correction experiments versus
+discrete characteristic-root predictions.}
+
+The sweep used $a=0.22$, $b=1$,
+$d=0.08\,\mu\mathrm{m}$, $E=1\,\mathrm{nm}$,
+and $M=8,9,10,12,14,18,24$.
+Each experiment started from $u=0$ and iterated
+the P update to
+$\max|e|/|E|\leq10^{-12}$ on 4096 controls.
+There was no periodic wrap.
+
+\smallnote{
+Measurements came from a dominant-mode fit over
+$s=8$--$32\,\mu\mathrm{m}$, initialized from
+measured peaks rather than theoretical roots.
+Predictions used all decaying roots and the
+boundary linear system.
+The three curves agree without fitting theory
+parameters to the profiles.
+}
+
+\begin{center}
+\includegraphics[
+  width=0.91\textwidth,
+  height=0.45\textheight,
+  keepaspectratio
+]{validation_portrait.png}
+\end{center}
+
+{\hbadness=10000
+\small
+\begin{tabularx}{\textwidth}{@{}YYY@{}}
+\toprule
+\textbf{Quantity}
+&
+\textbf{Maximum relative difference}
+&
+\textbf{Baseline theory: $M=9$}
+\\
+\midrule
+Envelope amplitude $A_0$
+&
+$0.008821\%$
+&
+$1.35087026\,E$
+\\
+Spatial decay $\gamma$
+&
+$0.005320\%$
+&
+$0.10720785\,\mu\mathrm{m}^{-1}$
+\\
+Period $L$
+&
+$0.000791\%$
+&
+$1.06184467\,\mu\mathrm{m}$
+\\
+\bottomrule
+\end{tabularx}\par
+}
+
+\smallnote{
+Small remaining differences include finite-window
+extraction of a dominant mode from a multimode
+profile.
+An independent banded solve also verified
+the converged iterations;
+the largest absolute difference was
+$4.4\times10^{-9}\,\mathrm{nm}$.
+}
+
+\smallnote{
+\textbf{Practical recipe:}
+Specify $a,b,d,M$ and the boundary error;
+solve the characteristic polynomial;
+retain decaying roots;
+solve the boundary system;
+select the slowest excited pair;
+compute $A_0$, $L$ and $\gamma$.
+This validates the mechanism for the stated
+linear box model.
+It demonstrates that converged mask correction
+need not be spatially flat;
+it does not by itself identify the kernel of
+a production lithography model.
+}
+
+\end{document}

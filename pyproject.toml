@@ -1,0 +1,11 @@
+[project]
+name = "opc-osc"
+version = "0.1.0"
+description = "Toy-model numerics and Manim film: OPC mask CD oscillation"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = ["slow: actual Manim render (job level)"]
+addopts = "-m 'not slow'"

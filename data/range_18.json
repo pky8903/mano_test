@@ -1,0 +1,143 @@
+{
+  "id": "range_18",
+  "config_hash": "0c289e710aabcf54",
+  "config": {
+    "id": "range_18",
+    "purpose": "S6 range comparison",
+    "a": 0.25,
+    "b": 1.0,
+    "M": 18,
+    "E0_nm": 1.0,
+    "E_bulk_nm": 0.0,
+    "d_um": 0.08,
+    "n_controls": 4096,
+    "tol_nm": 1e-12,
+    "keep": [],
+    "iterate": true,
+    "store_controls": 256,
+    "window_um": [
+      0.8,
+      8.0
+    ],
+    "notes_only": false,
+    "held_fixed": [
+      "a",
+      "b",
+      "d",
+      "forcing"
+    ],
+    "changed": [
+      "M"
+    ],
+    "eta": 0.8,
+    "forcing": "E_j = E_bulk + E0 * delta_{j0}; u_j = 0 outside [0, n_controls)",
+    "boundary": "zero outside block, no kernel renormalization, no periodic wrap",
+    "sign": "e = E - A u; u_next = u + eta e"
+  },
+  "direct_residual_nm": 5.551115123125783e-16,
+  "final_iter": 746,
+  "final_residual_nm": 9.732560352256059e-13,
+  "tol_nm": 1e-12,
+  "eta": 0.8,
+  "max_abs_u_final_minus_direct_nm": 2.877942697522562e-11,
+  "mask_variation_nm": 0.5363708582707858,
+  "window_um": [
+    0.8,
+    8.0
+  ],
+  "u0_nm": 3.976442799414989,
+  "prediction": {
+    "A0_nm": 0.5226231953692339,
+    "L_um": 2.0786968647392534,
+    "gamma_per_um": 0.36367549784147624,
+    "decay_length_um": 2.749704079420532,
+    "phi": 0.3151489780486133,
+    "root_abs": 0.9713251169252534,
+    "root_arg": 0.2418124706400703,
+    "amplitude_note": "A0 = dominant envelope extrapolated to s=0; not u_0 and not peak-to-peak"
+  },
+  "tail_fit": {
+    "window_um": [
+      12.012089662627217,
+      28.51031413915041
+    ],
+    "A0_nm": 0.5226197255814903,
+    "L_um": 2.07869691298961,
+    "gamma_per_um": 0.3636752104893783,
+    "n_extrema": 16,
+    "rel_rms": 1.8866817403878523e-05,
+    "rel_err_L": 2.321182912545794e-08,
+    "rel_err_gamma": -7.901332359505631e-07,
+    "rel_err_A0": -6.639176703848726e-06
+  },
+  "arrays": {
+    "x_um": {
+      "shape": [
+        4096
+      ],
+      "sha256_16": "180154cfffaf098f"
+    },
+    "E_nm": {
+      "shape": [
+        4096
+      ],
+      "sha256_16": "a2ed5ee38e711ec6"
+    },
+    "u_star_nm": {
+      "shape": [
+        4096
+      ],
+      "sha256_16": "b12adb9ede270737"
+    },
+    "iters": {
+      "shape": [
+        1
+      ],
+      "sha256_16": "34ee9aef6901bd59"
+    },
+    "u_hist_nm": {
+      "shape": [
+        1,
+        256
+      ],
+      "sha256_16": "dbb8fe4089660098"
+    },
+    "e_hist_nm": {
+      "shape": [
+        1,
+        256
+      ],
+      "sha256_16": "f683252e7a716a6c"
+    },
+    "du_hist_nm": {
+      "shape": [
+        1,
+        256
+      ],
+      "sha256_16": "a984097fa87db2dd"
+    },
+    "u_final_nm": {
+      "shape": [
+        4096
+      ],
+      "sha256_16": "75735547bb64ddd8"
+    },
+    "e_final_nm": {
+      "shape": [
+        4096
+      ],
+      "sha256_16": "6d04b126ef791165"
+    },
+    "residual_history_nm": {
+      "shape": [
+        747
+      ],
+      "sha256_16": "2399fd8ca8a44e49"
+    }
+  },
+  "versions": {
+    "python": "3.12.16",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  }
+}

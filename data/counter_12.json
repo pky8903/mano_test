@@ -1,0 +1,86 @@
+{
+  "id": "counter_12",
+  "config_hash": "5c84ccc4f6742b2c",
+  "config": {
+    "id": "counter_12",
+    "purpose": "Notes: near-threshold nonmonotonic decay",
+    "a": 0.22,
+    "b": 1.0,
+    "M": 12,
+    "E0_nm": 1.0,
+    "E_bulk_nm": 0.0,
+    "d_um": 0.08,
+    "n_controls": 4096,
+    "tol_nm": 1e-12,
+    "keep": [],
+    "iterate": false,
+    "store_controls": 256,
+    "window_um": [
+      0.8,
+      8.0
+    ],
+    "notes_only": true,
+    "held_fixed": [],
+    "changed": [],
+    "eta": 0.819672131147541,
+    "forcing": "E_j = E_bulk + E0 * delta_{j0}; u_j = 0 outside [0, n_controls)",
+    "boundary": "zero outside block, no kernel renormalization, no periodic wrap",
+    "sign": "e = E - A u; u_next = u + eta e"
+  },
+  "direct_residual_nm": 2.220446049250313e-16,
+  "mask_variation_nm": 1.6660652811206216,
+  "window_um": [
+    0.8,
+    8.0
+  ],
+  "u0_nm": 4.713070970753316,
+  "prediction": {
+    "A0_nm": 1.0026610781696457,
+    "L_um": 1.3978957594851757,
+    "gamma_per_um": 0.12075711966760465,
+    "decay_length_um": 8.28108522919886,
+    "phi": 0.2715161377849957,
+    "root_abs": 0.990385943826351,
+    "root_arg": 0.3595796189835265,
+    "amplitude_note": "A0 = dominant envelope extrapolated to s=0; not u_0 and not peak-to-peak"
+  },
+  "tail_fit": {
+    "window_um": [
+      6.501766829780488,
+      56.18827820497365
+    ],
+    "A0_nm": 1.0026614738611772,
+    "L_um": 1.3978957437648096,
+    "gamma_per_um": 0.12075712948744897,
+    "n_extrema": 71,
+    "rel_rms": 8.35769103990878e-06,
+    "rel_err_L": -1.1245735564990866e-08,
+    "rel_err_gamma": 8.131896778174053e-08,
+    "rel_err_A0": 3.9464136003530825e-07
+  },
+  "arrays": {
+    "x_um": {
+      "shape": [
+        4096
+      ],
+      "sha256_16": "180154cfffaf098f"
+    },
+    "E_nm": {
+      "shape": [
+        4096
+      ],
+      "sha256_16": "a2ed5ee38e711ec6"
+    },
+    "u_star_nm": {
+      "shape": [
+        4096
+      ],
+      "sha256_16": "6c42442e5e3b1c15"
+    }
+  },
+  "versions": {
+    "python": "3.12.16",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  }
+}

@@ -1,0 +1,10 @@
+# Manim CE 2D(Cairo) 렌더 환경. 정확한 고정 버전은 environment.lock.yml 참조.
+name: mano
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - manim=0.19.1
+  - numpy=2.5.4
+  - scipy=1.18.1
+  - pytest
