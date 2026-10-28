@@ -26,7 +26,7 @@ QUALITY=preview scripts/render_all.sh   # 480p15 미리보기
 
 ## 산출물
 
-- 영상: `out/opc_mask_cd_oscillation.mp4` (265 s, git 제외 — 위 스크립트로 재생성)
+- 영상: [deliverables/opc_mask_cd_oscillation.mp4](deliverables/opc_mask_cd_oscillation.mp4) (1080p30, 265 s, 커밋된 배포본) · 작업용 렌더는 `out/`(git 제외)
 - 문서: [docs/storyboard.md](docs/storyboard.md), [docs/presenter_notes_ko.md](docs/presenter_notes_ko.md),
   [docs/validation_report.md](docs/validation_report.md), [docs/completion_report.md](docs/completion_report.md)
 
