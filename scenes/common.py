@@ -142,7 +142,8 @@ def visible(x_um, xr=X_RANGE_UM):
     return (x_um >= xr[0] - 1e-9) & (x_um <= xr[1] + 1e-9)
 
 
-def series(panel: Panel, x_um, v, kind="mask", dash_count=160, offscale_fmt="{:+.2f} nm"):
+def series(panel: Panel, x_um, v, kind="mask", dash_count=160, offscale_fmt="{:+.2f} nm", color=None,
+           width=None, offscale_labels=True):
     """Discrete samples joined by straight segments (no smoothing).
 
     Returns dict(line, marks, off). `off` holds break markers + true-value labels."""
@@ -151,8 +152,9 @@ def series(panel: Panel, x_um, v, kind="mask", dash_count=160, offscale_fmt="{:+
     ya, yb = panel.yr
     vc = np.clip(vs, ya, yb)
     pts = [panel.c2p(x, y) for x, y in zip(xs, vc)]
-    color = MASK if kind == "mask" else ERR
-    line = VMobject(stroke_color=color, stroke_width=3.0 if kind == "mask" else 2.4).set_points_as_corners(pts)
+    color = color or (MASK if kind == "mask" else ERR)
+    width = width or (3.0 if kind == "mask" else 2.4)
+    line = VMobject(stroke_color=color, stroke_width=width).set_points_as_corners(pts)
     if kind != "mask":
         line = DashedVMobject(line, num_dashes=dash_count, dashed_ratio=0.6)
     marks = VGroup(*[
@@ -173,6 +175,8 @@ def series(panel: Panel, x_um, v, kind="mask", dash_count=160, offscale_fmt="{:+
         # value label sits inside the plot area, clear of the panel title
         lab = T(offscale_fmt.format(val), SMALL, color).next_to(tri, RIGHT, buff=0.1)
         lab.shift((-0.28 if top else 0.28) * UP)
+        if not offscale_labels:
+            lab = VGroup()
         brk = VGroup(Line(p + [-0.07, -0.03, 0], p + [0.07, 0.03, 0], stroke_color=color, stroke_width=2.5),
                      Line(p + [-0.07, -0.09, 0], p + [0.07, -0.03, 0], stroke_color=color, stroke_width=2.5))
         off.add(VGroup(tri, lab, brk))
@@ -204,3 +208,46 @@ def sci(v, digits=1):
 
 def group(s):
     return VGroup(s["line"], s["marks"], s["off"])
+
+
+def envelope_valid_from(x_um, u, pred, tol=0.05, step=0.1):
+    """Smallest distance beyond which the dominant pair matches the solved profile to `tol`
+    of the envelope. Inside it several modes overlap and no envelope is drawn."""
+    env = pred["A0_nm"] * np.exp(-pred["gamma_per_um"] * x_um)
+    dom = env * np.cos(2 * np.pi * x_um / pred["L_um"] + pred["phi"])
+    err = np.abs(u - dom) / env
+    for xs in np.arange(step, x_um[-1], step):
+        if err[x_um >= xs - 1e-9].max() <= tol:
+            return float(np.round(xs, 6))
+    raise ValueError("dominant-mode approximation never within tolerance")
+
+
+def envelope(panel: Panel, pred, x_from, color=MUTED, samples=120):
+    """+/- A0 exp(-gamma s) from the characteristic-root prediction (labelled approximation)."""
+    xs = np.linspace(x_from, panel.xr[1], samples)
+    g = VGroup()
+    for sgn in (1, -1):
+        ys = np.clip(sgn * pred["A0_nm"] * np.exp(-pred["gamma_per_um"] * xs), *panel.yr)
+        line = VMobject(stroke_color=color, stroke_width=2).set_points_as_corners([panel.c2p(a, b) for a, b in zip(xs, ys)])
+        g.add(DashedVMobject(line, num_dashes=40, dashed_ratio=0.5))
+    return g
+
+
+def card(title, lines, width, accent=INK, tag=None, body_size=SMALL):
+    """Rounded card with a bold title and short lines (observation / held-fixed cards)."""
+    head = T(title, LABEL, accent, weight="BOLD")
+    body = VGroup(*[T(l, body_size, INK) for l in lines]).arrange(DOWN, aligned_edge=LEFT, buff=0.14)
+    content = VGroup(head, body).arrange(DOWN, aligned_edge=LEFT, buff=0.22)
+    if tag is not None:
+        content = VGroup(tag, content).arrange(DOWN, aligned_edge=LEFT, buff=0.18)
+    box = RoundedRectangle(corner_radius=0.12, width=width, height=content.height + 0.5, stroke_color=accent,
+                           stroke_width=2, fill_color="#FFFFFF", fill_opacity=1)
+    content.move_to(box).align_to(box, LEFT).shift(0.25 * RIGHT)
+    return VGroup(box, content)
+
+
+def pill(s, color=MUTED, size=SMALL):
+    txt = T(s, size, color)
+    box = RoundedRectangle(corner_radius=0.08, width=txt.width + 0.3, height=txt.height + 0.18, stroke_color=color,
+                           stroke_width=1.5)
+    return VGroup(box, txt.move_to(box))

@@ -19,7 +19,16 @@ PY=/home/kyp/miniconda/envs/mano/bin/python
 $PY -m pytest                       # unit + flow
 $PY scripts/generate_data.py        # data/<id>.npz, .json
 $PY scripts/validate.py             # docs/validation_report.md (실패 시 exit 1)
+$PY -m pytest -m slow               # 실제 Manim 렌더 (job level)
+scripts/render_all.sh               # 1080p30 장면 렌더 + 연결 → out/opc_mask_cd_oscillation.mp4
+QUALITY=preview scripts/render_all.sh   # 480p15 미리보기
 ```
+
+## 산출물
+
+- 영상: `out/opc_mask_cd_oscillation.mp4` (265 s, git 제외 — 위 스크립트로 재생성)
+- 문서: [docs/storyboard.md](docs/storyboard.md), [docs/presenter_notes_ko.md](docs/presenter_notes_ko.md),
+  [docs/validation_report.md](docs/validation_report.md), [docs/completion_report.md](docs/completion_report.md)
 
 ## 부호 규약
 
