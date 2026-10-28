@@ -1,6 +1,6 @@
 {
   "id": "damp_040",
-  "config_hash": "0614645bd5ada2a0",
+  "config_hash": "5d1dcb2a15213e6e",
   "config": {
     "id": "damp_040",
     "purpose": "S6 damping comparison",
@@ -20,6 +20,7 @@
       8.0
     ],
     "notes_only": false,
+    "response_control": 40,
     "held_fixed": [
       "b",
       "M",
@@ -35,6 +36,7 @@
     "sign": "e = E - A u; u_next = u + eta e"
   },
   "direct_residual_nm": 3.3306690738754696e-16,
+  "response_control": 40,
   "final_iter": 158,
   "final_residual_nm": 8.69012977897099e-13,
   "tol_nm": 1e-12,
@@ -88,6 +90,18 @@
         4096
       ],
       "sha256_16": "989d2b8ae6472b7a"
+    },
+    "resp_interior_nm": {
+      "shape": [
+        256
+      ],
+      "sha256_16": "a015783393216b66"
+    },
+    "resp_edge_nm": {
+      "shape": [
+        256
+      ],
+      "sha256_16": "988078533ca7d466"
     },
     "iters": {
       "shape": [

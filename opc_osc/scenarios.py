@@ -35,6 +35,7 @@ class Scenario:
     store_controls: int = 256  # history arrays are stored on the first controls only (20.48 um)
     window_um: tuple[float, float] = (0.8, 8.0)
     notes_only: bool = False
+    response_control: int = 40  # interior control highlighted in S2 (x = 3.2 um)
     held_fixed: tuple[str, ...] = field(default=())
     changed: tuple[str, ...] = field(default=())
 

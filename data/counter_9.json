@@ -1,6 +1,6 @@
 {
   "id": "counter_9",
-  "config_hash": "8381e199a63e1a09",
+  "config_hash": "1029f3ede0577170",
   "config": {
     "id": "counter_9",
     "purpose": "Notes: near-threshold nonmonotonic decay",
@@ -20,6 +20,7 @@
       8.0
     ],
     "notes_only": true,
+    "response_control": 40,
     "held_fixed": [],
     "changed": [],
     "eta": 0.819672131147541,
@@ -28,6 +29,7 @@
     "sign": "e = E - A u; u_next = u + eta e"
   },
   "direct_residual_nm": 1.3877787807814457e-16,
+  "response_control": 40,
   "mask_variation_nm": 2.3742255733253184,
   "window_um": [
     0.8,
@@ -76,6 +78,18 @@
         4096
       ],
       "sha256_16": "4a9df78327a0f49f"
+    },
+    "resp_interior_nm": {
+      "shape": [
+        256
+      ],
+      "sha256_16": "414af3deb40b77fa"
+    },
+    "resp_edge_nm": {
+      "shape": [
+        256
+      ],
+      "sha256_16": "dfffdb061a711e2b"
     }
   },
   "versions": {

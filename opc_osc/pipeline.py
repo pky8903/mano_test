@@ -24,6 +24,14 @@ def run_scenario(s: Scenario) -> tuple[dict[str, np.ndarray], dict]:
         "direct_residual_nm": mt.max_abs_error(E - _apply(model, u_star)),
     }
 
+    # single-control responses (columns of A) for the coupling scene: interior and left-edge control
+    k = s.store_controls
+    for name, j in (("resp_interior_nm", s.response_control), ("resp_edge_nm", 0)):
+        unit = np.zeros(s.n_controls)
+        unit[j] = 1.0
+        arrays[name] = _apply(model, unit)[:k]
+    summary["response_control"] = s.response_control
+
     if s.iterate:
         it = p_iterate(model, E, tol_nm=s.tol_nm, keep=list(s.keep))
         if not it.converged:

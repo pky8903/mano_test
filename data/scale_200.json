@@ -1,6 +1,6 @@
 {
   "id": "scale_200",
-  "config_hash": "fcfebe3595e92e9b",
+  "config_hash": "11f5722c51d53b4d",
   "config": {
     "id": "scale_200",
     "purpose": "S5 amplitude scaling",
@@ -20,6 +20,7 @@
       8.0
     ],
     "notes_only": false,
+    "response_control": 40,
     "held_fixed": [
       "a",
       "b",
@@ -36,6 +37,7 @@
     "sign": "e = E - A u; u_next = u + eta e"
   },
   "direct_residual_nm": 6.661338147750939e-16,
+  "response_control": 40,
   "final_iter": 833,
   "final_residual_nm": 9.855466052630102e-13,
   "tol_nm": 1e-12,
@@ -89,6 +91,18 @@
         4096
       ],
       "sha256_16": "341f52891e21fd79"
+    },
+    "resp_interior_nm": {
+      "shape": [
+        256
+      ],
+      "sha256_16": "501704c5ca0aef4a"
+    },
+    "resp_edge_nm": {
+      "shape": [
+        256
+      ],
+      "sha256_16": "fa7f8ba90bf28501"
     },
     "iters": {
       "shape": [

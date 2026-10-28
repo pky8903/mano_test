@@ -94,6 +94,16 @@ def main():
     gate("bg_ref: uniform error gives non-flat correction near edge (u0 - u_bulk, nm)",
          float(abs(ub[0] - ub[2000])), "> 1e-3", ok=abs(ub[0] - ub[2000]) > 1e-3, fmt="{:.4f}")
 
+    # S2 single-control responses: local + distributed neighbors, edge window truncated (not renormalized)
+    mm = s.model
+    ri, re_ = data["main"][0]["resp_interior_nm"], data["main"][0]["resp_edge_nm"]
+    j0 = data["main"][1]["response_control"]
+    gate("S2 interior response: sum = a + b", abs(float(ri.sum()) - (mm.a + mm.b)), 1e-14)
+    gate("S2 interior response: support = 2M+1 controls", int(np.count_nonzero(ri)), 2 * mm.M + 1,
+         ok=np.count_nonzero(ri) == 2 * mm.M + 1 and ri[j0] == max(ri), fmt="{}")
+    gate("S2 edge response: sum = a + b(M+1)/N (no renormalization)",
+         abs(float(re_.sum()) - (mm.a + mm.b * (mm.M + 1) / mm.N)), 1e-14)
+
     # local-only case
     ul = solve_direct(Model(0.25, 0.0, 9), s.forcing())
     gate("local-only (b=0): max|u - E/a| (nm)", float(np.max(np.abs(ul - s.forcing() / 0.25))), 1e-15)

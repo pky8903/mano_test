@@ -1,6 +1,6 @@
 {
   "id": "range_13",
-  "config_hash": "14676f4b0a1b1c97",
+  "config_hash": "aaa320b568dd88d7",
   "config": {
     "id": "range_13",
     "purpose": "S6 range comparison",
@@ -20,6 +20,7 @@
       8.0
     ],
     "notes_only": false,
+    "response_control": 40,
     "held_fixed": [
       "a",
       "b",
@@ -35,6 +36,7 @@
     "sign": "e = E - A u; u_next = u + eta e"
   },
   "direct_residual_nm": 4.163336342344337e-17,
+  "response_control": 40,
   "final_iter": 768,
   "final_residual_nm": 9.863794893719136e-13,
   "tol_nm": 1e-12,
@@ -88,6 +90,18 @@
         4096
       ],
       "sha256_16": "de236645b849c8d0"
+    },
+    "resp_interior_nm": {
+      "shape": [
+        256
+      ],
+      "sha256_16": "739ea249b5ff34c5"
+    },
+    "resp_edge_nm": {
+      "shape": [
+        256
+      ],
+      "sha256_16": "bc5ba16cd80cb428"
     },
     "iters": {
       "shape": [
